@@ -54,7 +54,10 @@ if (( $BAD_RESPONSE >= $BAD_THRESHOLD )); then
  echo "$(date "+%d.%m.%Y %T") : Too many errors, ejecting disk and aborting"
  # Run makemkvcon once more with full output, to potentially aid in debugging
  makemkvcon -r --cache=1 info disc:9999
- eject $DRIVE >> $LOGFILE 2>&1
+ sleep 2
+ sdparm --command=unlock $DRIVE >> $LOGFILE 2>&1
+ sleep 1
+ sdparm --command=eject $DRIVE >> $LOGFILE 2>&1
  exit 1
 fi
 
@@ -87,7 +90,10 @@ if [ "$BD1" = 'DRV:0,2,999,12,"' ] || [ "$BD2" = 'DRV:0,2,999,28,"' ]; then
     mv -v "$BDPATH" "$BDFINISH"
  fi
  echo "$(date "+%d.%m.%Y %T") : Done! Ejecting Disk"
- eject $DRIVE >> $LOGFILE 2>&1
+ sleep 2
+ sdparm --command=unlock $DRIVE >> $LOGFILE 2>&1
+ sleep 1
+ sdparm --command=eject $DRIVE >> $LOGFILE 2>&1 
  # permissions
  chown -R nobody:users "$STORAGE_BD" && chmod -R g+rw "$STORAGE_BD"
 fi
@@ -111,7 +117,10 @@ if [ "$DVD" = 'DRV:0,2,999,1,"' ]; then
     mv -v "$DVDPATH" "$DVDFINISH" 
  fi
  echo "$(date "+%d.%m.%Y %T") : Done! Ejecting Disk"
- eject $DRIVE >> $LOGFILE 2>&1
+ sleep 2
+ sdparm --command=unlock $DRIVE >> $LOGFILE 2>&1
+ sleep 1
+ sdparm --command=eject $DRIVE >> $LOGFILE 2>&1
  # permissions
  chown -R nobody:users "$STORAGE_DVD" && chmod -R g+rw "$STORAGE_DVD"
 fi
@@ -128,7 +137,10 @@ if [ "$CD1" = 'DRV:0,2,999,0,"' ]; then
      /usr/bin/ripit -d "$DRIVE" -c 0,2 -W -o "$STORAGE_CD" -b 320 --comment cddbid --playlist 0 -D '"$suffix/$artist/$album"'  --infolog "/log/autorip_"$LOGFILE"" -Z 2 -O y --uppercasefirst --nointeraction >> $LOGFILE 2>&1
   fi
   echo "$(date "+%d.%m.%Y %T") : Done! Ejecting Disk"
-  eject $DRIVE >> $LOGFILE 2>&1
+  sleep 2
+  sdparm --command=unlock $DRIVE >> $LOGFILE 2>&1
+  sleep 1
+  sdparm --command=eject $DRIVE >> $LOGFILE 2>&1
   # permissions
   chown -R nobody:users "$STORAGE_CD" && chmod -R g+rw "$STORAGE_CD"
  else
@@ -145,7 +157,10 @@ if [ "$CD1" = 'DRV:0,2,999,0,"' ]; then
      ddrescue $DRIVE $ISOPATH >> $LOGFILE 2>&1
   fi
   echo "$(date "+%d.%m.%Y %T") : Done! Ejecting Disk"
-  eject $DRIVE >> $LOGFILE 2>&1
+  sleep 2
+  sdparm --command=unlock $DRIVE >> $LOGFILE 2>&1
+  sleep 1
+  sdparm --command=eject $DRIVE >> $LOGFILE 2>&1
   # permissions
   chown -R nobody:users "$STORAGE_DATA" && chmod -R g+rw "$STORAGE_DATA"
  fi
